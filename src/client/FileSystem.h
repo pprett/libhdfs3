@@ -51,6 +51,7 @@ public:
      */
     FileSystem(const Config & conf);
 
+    FileSystem(const Config & conf, const char * effective_user);
     /**
      * Copy construct of FileSystem
      */
@@ -70,6 +71,10 @@ public:
      * Connect to default hdfs.
      */
     void connect();
+
+    // TODO
+    std::string effective_user;
+
 
     /**
      * Connect to hdfs
