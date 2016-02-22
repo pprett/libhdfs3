@@ -73,7 +73,7 @@ UserInfo UserInfo::LocalUser() {
 }
 
 size_t UserInfo::hash_value() const {
-    size_t values[] = { StringHasher(realUser), effectiveUser.hash_value() };
+    size_t values[] = { StringHasher(realUser), krbUser.hash_value(), StringHasher(effectiveUser)  };
     return CombineHasher(values, sizeof(values) / sizeof(values[0]));
 }
 
