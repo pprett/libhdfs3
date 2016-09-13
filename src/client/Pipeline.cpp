@@ -47,6 +47,7 @@ PipelineImpl::PipelineImpl(bool append, const char * path, const SessionConfig &
         bytesSent), bytesSent(bytesSent), packetPool(packetPool), filesystem(filesystem), lastBlock(lastBlock), path(
             path) {
     canAddDatanode = conf.canAddDatanode();
+    canAddDatanodeBest = conf.canAddDatanodeBest();
     blockWriteRetry = conf.getBlockWriteRetry();
     connectTimeout = conf.getOutputConnTimeout();
     readTimeout = conf.getOutputReadTimeout();
@@ -244,7 +245,7 @@ void PipelineImpl::buildForAppendOrRecovery(bool recovery) {
 
                     // We may have remove nodes due to timeout, try again, but allow for
                     // excluded ones to be added back
-                    if (!addDatanodeToPipeline(empty)) {
+                    if (!addDatanodeToPipeline(excludedNodes) && !canAddDatanodeBest) {
                         THROW(HdfsIOException,
                               "Failed to add new datanode into pipeline for block: %s file %s, "
                               "set \"output.replace-datanode-on-failure\" to \"false\" to disable this feature.",
