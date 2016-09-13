@@ -64,6 +64,8 @@ SessionConfig::SessionConfig(const Config & conf) {
         }, {
             &addDatanode, "output.replace-datanode-on-failure", true
         }, {
+            &addDatanodeBest, "output.replace-datanode-on-failure.best-effort", true
+        },{
             &notRetryAnotherNode, "input.notretry-another-node", false
         }, {
             &useMappedFile, "input.localread.mappedfile", false

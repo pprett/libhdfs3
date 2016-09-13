@@ -174,6 +174,7 @@ private:
 private:
     BlockConstructionStage stage;
     bool canAddDatanode;
+    bool canAddDatanodeBest;
     int blockWriteRetry;
     int checksumType;
     int chunkSize;

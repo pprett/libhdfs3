@@ -47,6 +47,7 @@ PipelineImpl::PipelineImpl(bool append, const char * path, const SessionConfig &
         bytesSent), bytesSent(bytesSent), packetPool(packetPool), filesystem(filesystem), lastBlock(lastBlock), path(
             path) {
     canAddDatanode = conf.canAddDatanode();
+    canAddDatanodeBest = conf.canAddDatanodeBest();
     blockWriteRetry = conf.getBlockWriteRetry();
     connectTimeout = conf.getOutputConnTimeout();
     readTimeout = conf.getOutputReadTimeout();
@@ -199,6 +200,7 @@ void PipelineImpl::buildForAppendOrRecovery(bool recovery) {
     int retry = blockWriteRetry;
     exception_ptr lastException;
     std::vector<DatanodeInfo> excludedNodes;
+    std::vector<DatanodeInfo> empty;
     shared_ptr<LocatedBlock> lb;
     std::string buffer;
 
@@ -240,10 +242,15 @@ void PipelineImpl::buildForAppendOrRecovery(bool recovery) {
             if (stage != PIPELINE_SETUP_CREATE && stage != PIPELINE_CLOSE
                     && static_cast<int>(nodes.size()) < replication && canAddDatanode) {
                 if (!addDatanodeToPipeline(excludedNodes)) {
-                    THROW(HdfsIOException,
-                          "Failed to add new datanode into pipeline for block: %s file %s, "
-                          "set \"output.replace-datanode-on-failure\" to \"false\" to disable this feature.",
-                          lastBlock->toString().c_str(), path.c_str());
+
+                    // We may have remove nodes due to timeout, try again, but allow for
+                    // excluded ones to be added back
+                    if (!addDatanodeToPipeline(excludedNodes) && !canAddDatanodeBest) {
+                        THROW(HdfsIOException,
+                              "Failed to add new datanode into pipeline for block: %s file %s, "
+                              "set \"output.replace-datanode-on-failure\" to \"false\" to disable this feature.",
+                              lastBlock->toString().c_str(), path.c_str());
+                    }
                 }
             }
 
