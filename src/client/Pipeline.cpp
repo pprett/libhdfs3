@@ -292,7 +292,7 @@ void PipelineImpl::buildForAppendOrRecovery(bool recovery) {
                         added = true;
                     }
                 }
-                if (!addded && !addDatanodeToPipeline(excludedNodes)) {
+                if (!added && !addDatanodeToPipeline(excludedNodes)) {
 
                     // We may have remove nodes due to timeout, try again, but allow for
                     // excluded ones to be added back
