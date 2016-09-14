@@ -169,9 +169,6 @@ bool PipelineImpl::addDatanodeToPipeline(const std::vector<DatanodeInfo> & exclu
             "Failed to add a new datanode into pipeline for block: %s file %s.\n%s",
             lastBlock->toString().c_str(), path.c_str(), GetExceptionDetail(e, buffer));
     }
-    catch (...) {
-        printf("got exception\n");
-    }
 
     return false;
 }
