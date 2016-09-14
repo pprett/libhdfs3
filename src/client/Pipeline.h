@@ -172,6 +172,7 @@ private:
     static void checkBadLinkFormat(const std::string & node);
 
 private:
+    const SessionConfig & config;
     BlockConstructionStage stage;
     bool canAddDatanode;
     bool canAddDatanodeBest;
