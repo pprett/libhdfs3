@@ -87,6 +87,8 @@ void SaslClient::initKerberos(const RpcSaslProto_SaslAuth & auth,
     gsasl_property_set(session, GSASL_SERVICE, auth.protocol().c_str());
     gsasl_property_set(session, GSASL_AUTHID, principal.c_str());
     gsasl_property_set(session, GSASL_HOSTNAME, auth.serverid().c_str());
+    // FIXME this value needs to be set according to hadoop.rpc.protection
+    gsasl_property_set(session, GSASL_QOP, GSASL_QOP_AUTH_CONF);
 }
 
 std::string Base64Encode(const std::string & in) {
